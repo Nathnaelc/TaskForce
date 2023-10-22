@@ -1,0 +1,57 @@
+import React, { useState } from "react";
+import TodoItem from "../TodoItem/TodoItem";
+import { useTodoContext } from "../../contexts/TodoContext";
+
+const TodoList = () => {
+  const { todos, addTask, selectedList, selectTask } = useTodoContext();
+  const [newTaskName, setNewTaskName] = useState("");
+
+  const handleAddTask = async () => {
+    if (newTaskName) {
+      const newTask = {
+        task_name: newTaskName,
+        list_id: selectedList.list_id,
+      };
+      await addTask(newTask);
+      setNewTaskName("");
+    }
+  };
+
+  // This function will handle when a todo item is clicked.
+  const handleTodoClick = (taskId) => {
+    selectTask(taskId);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input
+        type="text"
+        placeholder="Add a new task..."
+        className="p-2 rounded bg-opacity-70 text-black"
+        value={newTaskName}
+        onChange={(e) => setNewTaskName(e.target.value)}
+      />
+      <button
+        onClick={handleAddTask}
+        className="p-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
+      >
+        Add Task
+      </button>
+      {todos && todos.length > 0 ? (
+        todos.map((todo) => (
+          <div
+            key={todo.task_id}
+            onClick={() => handleTodoClick(todo.task_id)}
+            className="cursor-pointer"
+          >
+            <TodoItem todo={todo} />
+          </div>
+        ))
+      ) : (
+        <p className="text-gray-500">No tasks available.</p>
+      )}
+    </div>
+  );
+};
+
+export default TodoList;
