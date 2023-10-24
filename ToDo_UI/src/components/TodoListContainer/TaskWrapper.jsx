@@ -9,15 +9,16 @@ export default function TaskWrapper() {
 
   return (
     <div className="flex w-full h-full">
-      <main className="w-3/5 p-4">
+      <main className="flex-grow p-4">
         <TodoList />
       </main>
-      {console.log("Selected Task:", selectedTask)}
-      {selectedTask ? (
-        <SubtaskSidebar task={selectedTask} />
-      ) : (
-        <div>No task Selected right</div>
-      )}
+      <aside className="w-1/3 bg-gray-700 p-4">
+        {selectedTask ? (
+          <SubtaskSidebar task={selectedTask} />
+        ) : (
+          <div>No task Selected right</div>
+        )}
+      </aside>
     </div>
   );
 }

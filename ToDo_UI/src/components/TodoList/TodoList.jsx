@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TodoItem from "../TodoItem/TodoItem";
 import { useTodoContext } from "../../contexts/TodoContext";
+import { getTodoAndSubTasks } from "../../utils/api";
 
 const TodoList = () => {
   const { todos, addTask, selectedList, selectTask } = useTodoContext();
@@ -8,9 +9,11 @@ const TodoList = () => {
 
   const handleAddTask = async () => {
     if (newTaskName) {
+      const userId = localStorage.getItem("userId");
       const newTask = {
         task_name: newTaskName,
         list_id: selectedList.list_id,
+        user_id: userId,
       };
       await addTask(newTask);
       setNewTaskName("");
@@ -18,7 +21,8 @@ const TodoList = () => {
   };
 
   // This function will handle when a todo item is clicked.
-  const handleTodoClick = (taskId) => {
+  const handleTodoClick = async (taskId) => {
+    const fllTask = await getTodoAndSubTasks(taskId);
     selectTask(taskId);
   };
 

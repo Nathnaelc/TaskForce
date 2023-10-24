@@ -6,9 +6,8 @@ export default function TodoItem({ todo }) {
 
   return (
     <div
-      className="flex items-start space-x-4 p-2 bg-opacity-70 rounded hover:bg-gray-800 cursor-pointer"
+      className="flex items-start space-x-4 p-2 bg-gray-700 rounded hover:bg-gray-800 cursor-pointer"
       onClick={() => {
-        console.log("Item clicked", todo);
         setSelectedTask(todo);
       }}
     >

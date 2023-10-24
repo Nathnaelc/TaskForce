@@ -3,7 +3,9 @@ import {
   fetchTodoLists,
   addNewList,
   getAllTodosForList,
+  getTodoWithSubtasks,
   addTodo,
+  addSubtaskAPI,
 } from "./../utils/api";
 
 const TodoContext = createContext();
@@ -16,6 +18,7 @@ export const TodoProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [noListsAvailable, setNoListsAvailable] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+
   // for loading the lists
   useEffect(() => {
     async function loadLists() {
@@ -37,6 +40,7 @@ export const TodoProvider = ({ children }) => {
 
     loadLists();
   }, []);
+
   // for loading the todos
   useEffect(() => {
     if (selectedList) {
@@ -65,6 +69,7 @@ export const TodoProvider = ({ children }) => {
       console.error("Task with ID", taskId, "not found!");
     }
   };
+
   //for deubgging
   useEffect(() => {
     console.log("Selected task changed:", selectedTask);
@@ -96,6 +101,13 @@ export const TodoProvider = ({ children }) => {
   };
 
   const addSubtask = async (listId, parentId, taskName) => {
+    console.log("Parent ID at the start of addSubtask:", parentId);
+    if (!parentId) {
+      console.error(
+        "Parent ID is undefined. Cannot proceed with adding subtask."
+      );
+      return;
+    }
     try {
       setLoading(true);
       const userId = localStorage.getItem("userId");
@@ -105,13 +117,13 @@ export const TodoProvider = ({ children }) => {
         user_id: userId,
         task_name: taskName,
       };
-      const addedSubtask = await addSubtask(newSubtask);
-      // Optionally, fetch the parent task again to refresh its subtasks
+      const addedSubtask = await addSubtaskAPI(parentId, newSubtask); // Corrected API call
       const updatedTaskWithSubtasks = await getTodoWithSubtasks(parentId);
+      setSelectedTask(updatedTaskWithSubtasks);
       setTodos((prev) => {
         const updatedTodos = [...prev];
         const taskIndex = updatedTodos.findIndex(
-          (task) => task.id === parentId
+          (task) => task.task_id === parentId
         );
         if (taskIndex !== -1) {
           updatedTodos[taskIndex] = updatedTaskWithSubtasks;
@@ -119,7 +131,7 @@ export const TodoProvider = ({ children }) => {
         return updatedTodos;
       });
     } catch (error) {
-      setError(error.message);
+      console.error("Error in addSubtask:", error.message);
     } finally {
       setLoading(false);
     }
@@ -128,7 +140,7 @@ export const TodoProvider = ({ children }) => {
   const addList = async (listName) => {
     try {
       const userId = localStorage.getItem("userId");
-      const newList = await addNewList(userId, listName); // Assuming you have userId in the context
+      const newList = await addNewList(userId, listName);
       setLists((prevLists) => [...prevLists, newList]);
     } catch (error) {
       console.error("Error adding new list:", error);
@@ -150,6 +162,7 @@ export const TodoProvider = ({ children }) => {
         noListsAvailable,
         selectedTask,
         setSelectedTask,
+        addSubtask,
         selectTask,
         deselectTask,
       }}

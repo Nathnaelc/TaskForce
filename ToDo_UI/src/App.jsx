@@ -24,9 +24,6 @@ export default function App() {
       <AuthProvider>
         <AppRoutes />
       </AuthProvider>
-      <TodoProvider>
-        <TaskWrapper />
-      </TodoProvider>
     </Router>
   );
 }

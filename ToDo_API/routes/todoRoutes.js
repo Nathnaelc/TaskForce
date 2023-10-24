@@ -53,7 +53,7 @@ router.post("/addtodo", async (req, res) => {
   }
 });
 
-router.put("/todo/:taskId", async (req, res) => {
+router.put("/:taskId/edit", async (req, res) => {
   try {
     const updatedTodo = await Todo.updateTodo(req.params.taskId, req.body);
 
@@ -83,7 +83,7 @@ router.delete("/todo/:taskId", async (req, res) => {
 });
 
 // simply retrieves the subtasks of a given task
-router.get("/todo/:taskId/subtasks", async (req, res) => {
+router.get("/:taskId/subtasks", async (req, res) => {
   try {
     const subTasks = await Todo.getSubTasks(req.params.taskId);
 
@@ -98,9 +98,15 @@ router.get("/todo/:taskId/subtasks", async (req, res) => {
 });
 
 // adds a subtask to a given task
-router.post("/todo/:taskId/addSubtask", async (req, res) => {
+router.post("/:taskId/addSubtask", async (req, res) => {
   try {
     const parentTaskId = req.params.taskId;
+    const parentTask = await Todo.getTodoById(parentTaskId);
+
+    if (!parentTask) {
+      return res.status(400).json({ error: "Invalid parent_task_id" });
+    }
+
     const subtaskData = req.body;
     subtaskData.parent_task_id = parentTaskId;
 
@@ -113,7 +119,7 @@ router.post("/todo/:taskId/addSubtask", async (req, res) => {
 });
 
 // retrieves a task and its entire hierarchy of subtasks recursively
-router.get("/todo/:taskId/withSubTasks", async (req, res) => {
+router.get("/:taskId/withSubTasks", async (req, res) => {
   try {
     console.log("Task ID:", req.params.taskId);
     if (!req.params.taskId) {
@@ -128,6 +134,7 @@ router.get("/todo/:taskId/withSubTasks", async (req, res) => {
 
     res.json(todoWithSubTasks);
   } catch (error) {
+    console.error("Server Error:", error); // Add this line
     res.status(500).json({ error: "Server Error", details: error.message });
   }
 });

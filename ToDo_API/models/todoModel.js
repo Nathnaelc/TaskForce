@@ -123,18 +123,16 @@ const deleteTodo = async (taskId) => {
   }
 };
 
+// get subtasks
 const getSubTasks = async (taskId) => {
   try {
     const query = "SELECT * FROM tasks WHERE parent_task_id = $1";
     const values = [taskId];
     const result = await db.query(query, values);
 
-    if (result.rows.length === 0) {
-      throw new Error("No subtasks found for the given task ID.");
-    }
-
-    return result.rows;
+    return result.rows; // returning an empty array if no subtasks are found is fine
   } catch (error) {
+    console.error("Server-side error:", error.message);
     throw new Error(`Database Error: ${error.message}`);
   }
 };
@@ -143,18 +141,24 @@ const getSubTasks = async (taskId) => {
 const addSubtask = async (subtaskData) => {
   try {
     const query =
-      "INSERT INTO tasks (title, parent_task_id) VALUES ($1, $2) RETURNING *";
-    const values = [subtaskData.title, subtaskData.parent_task_id];
+      "INSERT INTO tasks (task_name, parent_task_id, list_id, user_id) VALUES ($1, $2, $3, $4) RETURNING *";
+    const values = [
+      subtaskData.task_name,
+      subtaskData.parent_task_id,
+      subtaskData.list_id,
+      subtaskData.user_id,
+    ];
 
     const result = await db.query(query, values);
 
-    if (result.rows.length === 0) {
-      throw new Error("Failed to insert the subtask.");
-    }
+    // if (result.rows.length === 0) {
+    //   throw new Error("Failed to insert the subtask.");
+    // }
 
     return result.rows[0];
   } catch (error) {
-    throw new Error(`Database Error: ${error.message}`);
+    console.error("Server-side error:", error);
+    res.status(500).json({ error: "Server Error", details: error.message });
   }
 };
 
