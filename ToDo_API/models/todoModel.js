@@ -151,10 +151,6 @@ const addSubtask = async (subtaskData) => {
 
     const result = await db.query(query, values);
 
-    // if (result.rows.length === 0) {
-    //   throw new Error("Failed to insert the subtask.");
-    // }
-
     return result.rows[0];
   } catch (error) {
     console.error("Server-side error:", error);

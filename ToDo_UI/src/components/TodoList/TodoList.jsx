@@ -1,3 +1,5 @@
+// perhaps rename it to Parent tasks todo list
+
 import React, { useState } from "react";
 import TodoItem from "../TodoItem/TodoItem";
 import { useTodoContext } from "../../contexts/TodoContext";
@@ -42,15 +44,18 @@ const TodoList = () => {
         Add Task
       </button>
       {todos && todos.length > 0 ? (
-        todos.map((todo) => (
-          <div
-            key={todo.task_id}
-            onClick={() => handleTodoClick(todo.task_id)}
-            className="cursor-pointer"
-          >
-            <TodoItem todo={todo} />
-          </div>
-        ))
+        // Here's the filtering step
+        todos
+          .filter((todo) => !todo.parent_task_id)
+          .map((todo) => (
+            <div
+              key={todo.task_id}
+              onClick={() => handleTodoClick(todo.task_id)}
+              className="cursor-pointer"
+            >
+              <TodoItem todo={todo} />
+            </div>
+          ))
       ) : (
         <p className="text-gray-500">No tasks available.</p>
       )}
