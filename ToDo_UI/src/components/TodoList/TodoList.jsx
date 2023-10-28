@@ -4,7 +4,8 @@ import { useTodoContext } from "../../contexts/TodoContext";
 import { getTodoAndSubTasks } from "../../utils/api";
 
 const TodoList = () => {
-  const { todos, addTask, selectedList, selectTask } = useTodoContext();
+  const { todos, addTask, selectedList, selectTask, lists, moveTask } =
+    useTodoContext();
   const [newTaskName, setNewTaskName] = useState("");
   const [activeTodoId, setActiveTodoId] = useState(null);
   const [isCompletedSectionOpen, setCompletedSectionOpen] = useState(false);
@@ -28,6 +29,12 @@ const TodoList = () => {
     selectTask(taskId);
   };
 
+  const handleMoveTask = async (taskId, newListId) => {
+    if (newListId !== selectedList.list_id) {
+      await moveTask(taskId, newListId);
+    }
+  };
+
   return (
     <div className="space-y-2 w-full font-medium">
       <form
@@ -40,52 +47,62 @@ const TodoList = () => {
         <input
           type="text"
           placeholder="Add a new task..."
-          className="p-2 rounded text-black flex-grow dark:bg-gray-700 dark:text-white"
+          className="p-2 rounded text-black flex-grow bg-gray-200 dark:bg-gray-700 dark:text-white"
           value={newTaskName}
           onChange={(e) => setNewTaskName(e.target.value)}
         />
         <button
           type="submit"
-          className="ml-2 pl-12 pr-12 text-blue-600 p-2 dark:text-blue-300 bg-blue-200 dark:bg-blue-800 rounded px-2"
+          className="ml-2 pl-12 pr-12 text-blue-600 p-2 bg-blue-200 dark:bg-blue-800 rounded px-2"
         >
           Add Task
         </button>
       </form>
+
       {todos && todos.length > 0 ? (
         todos
-          .filter((todo) => !todo.parent_task_id && !todo.is_completed) // Added filter for incomplete tasks
-          .map((todo) => (
-            <div
-              key={todo.task_id}
-              onClick={() => handleTodoClick(todo.task_id)}
-              className={`cursor-pointer p-2 rounded mb-1 dark:bg-gray-700 ${
-                activeTodoId === todo.task_id
-                  ? "bg-opacity-80 text-black border border-blue-300 dark:border-blue-500"
-                  : "text-black dark:text-white"
-              }`}
-            >
-              <TodoItem todo={todo} />
+          .filter((todo) => !todo.parent_task_id && !todo.is_completed)
+          .map((todo, index) => (
+            <div key={todo.task_id}>
+              <div
+                onClick={() => handleTodoClick(todo.task_id)}
+                className={`cursor-pointer p-2 rounded mb-1 bg-gray-200 dark:bg-gray-700 ${
+                  activeTodoId === todo.task_id
+                    ? "border border-blue-300 dark:border-blue-500"
+                    : "text-black dark:text-white"
+                }`}
+              >
+                <TodoItem todo={todo} />
+                {/* Dropdown to move task */}
+                <select
+                  onChange={(e) => handleMoveTask(todo.task_id, e.target.value)}
+                  style={{ float: "right", marginTop: "-25px" }}
+                >
+                  <option value="" disabled selected>
+                    Move to list
+                  </option>
+                  {lists.map((list) => (
+                    <option key={list.list_id} value={list.list_id}>
+                      {list.list_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           ))
       ) : (
         <p className="text-gray-500 dark:text-gray-400">No tasks available.</p>
       )}
-      {/* Divider with added margin */}
-      <hr className="my-4 mt-8" />
 
-      {/* Completed Section */}
+      <hr className="my-4 mt-8" />
       <div onClick={() => setCompletedSectionOpen(!isCompletedSectionOpen)}>
         <h2 className="text-xl text-black dark:text-white">
-          {" "}
-          {/* Adjusted font size and color */}
           {isCompletedSectionOpen ? "▼ " : "▶ "}Completed
         </h2>
       </div>
-
-      {/* Completed Tasks */}
       {isCompletedSectionOpen &&
         todos
-          .filter((todo) => todo.is_completed) // Filter for completed tasks
+          .filter((todo) => todo.is_completed)
           .map((todo) => <TodoItem key={todo.task_id} todo={todo} />)}
     </div>
   );

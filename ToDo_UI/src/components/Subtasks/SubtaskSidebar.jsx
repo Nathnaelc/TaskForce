@@ -20,7 +20,7 @@ export default function SubtaskSidebar({ task }) {
         className="flex flex-col p-4 bg-white dark:bg-black text-black dark:text-white overflow-y-auto"
         style={{ maxHeight: "100vh" }}
       >
-        <h2 className="mb-4">Subtasks of {task.task_name}</h2>
+        <h2 className="text-xl mb-4">Subtasks of {task.task_name}</h2>
         <div className="mt-4">
           <SubtaskComponent task={task} />
         </div>

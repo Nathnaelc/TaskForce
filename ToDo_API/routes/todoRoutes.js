@@ -191,7 +191,8 @@ router.put("/tasks/:taskId/move/:targetListId", async (req, res) => {
     const { taskId, targetListId } = req.params;
     await Todo.moveTaskToList(taskId, targetListId);
     res.status(200).send("Task moved successfully");
-  } catch (e) {
+  } catch (error) {
+    console.error("Server Error moving todo:", error);
     res.status(500).send("Server error");
   }
 });

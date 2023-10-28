@@ -1,4 +1,5 @@
 const db = require("../db/db");
+const { pool } = require("../db/db");
 
 // This function should retrieve all todos for a user with a given list ID
 const getAllTodosForList = async (listId) => {
@@ -215,9 +216,9 @@ const moveTaskToList = async (taskId, targetListId) => {
     await updateSubTasksListId(client, taskId, targetListId);
 
     await client.query("COMMIT");
-  } catch (e) {
+  } catch (error) {
     await client.query("ROLLBACK");
-    throw e;
+    throw error;
   } finally {
     client.release();
   }

@@ -74,7 +74,6 @@ export default function NavBar({ loggedIn, user, setUser, setLoggedIn }) {
           <MenuIcon className="h-6 w-6 text-blue-500 dark:text-blue-300" />
         </button>
         <div className={`hidden md:flex ml-auto space-x-4 items-center mr-4`}>
-          <MenuButton label="Home" path="/home" />
           <DarkModeToggler />
         </div>
         {showToast && (

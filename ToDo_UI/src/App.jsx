@@ -43,7 +43,7 @@ function AppRoutes() {
 
       <Routes>
         <Route
-          path="/home"
+          path="/"
           element={
             isLoggedIn ? (
               <TodoProvider>
@@ -58,7 +58,7 @@ function AppRoutes() {
           path="/login"
           element={
             isLoggedIn ? (
-              <Navigate to="/home" replace />
+              <Navigate to="/" replace />
             ) : (
               <LoginHandler>
                 <LoginPage />
@@ -70,22 +70,11 @@ function AppRoutes() {
           path="/register"
           element={
             isLoggedIn ? (
-              <Navigate to="/home" replace />
+              <Navigate to="/" replace />
             ) : (
               <RegistrationHandler>
                 <RegistrationPage />
               </RegistrationHandler>
-            )
-          }
-        />
-        {/* place holder text for dashboard */}
-        <Route
-          path="/"
-          element={
-            isLoggedIn ? (
-              <h1>you are logged in</h1>
-            ) : (
-              <h1>You are not logged in</h1>
             )
           }
         />

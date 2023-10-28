@@ -16,7 +16,7 @@ const fetchTodoLists = async () => {
   }
 };
 
-// add a new list on the sidebar
+// add a new list on the TodoList Sidebar
 const addNewList = async (userId, listName) => {
   try {
     const response = await fetch(`${BASE_URL}/api/lists/addlist`, {
@@ -146,26 +146,47 @@ const toggleTaskCompletion = async (taskId, isCompleted) => {
 
 // delete a subtask with subtasks
 const deleteTaskWithSubTasks = async (taskId) => {
-  const response = await fetch(
-    `${BASE_URL}/api/todos/taskWithSubtasks/${taskId}`,
-    {
-      method: "DELETE",
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/todos/taskWithSubtasks/${taskId}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  );
-  const data = await response.json();
-  return data;
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error deleting task with subtasks: ${error}`);
+  }
 };
 
 // move a task to a different list
 const moveTaskToList = async (taskId, targetListId) => {
   try {
-    const response = await axios.put(
-      `${BASE_URL}/api/todos/tasks/${taskId}/move/${targetListId}`
+    console.log("Task ID for move:", taskId);
+    console.log("Target List ID for move:", targetListId);
+    const response = await fetch(
+      `${BASE_URL}/api/todos/tasks/${taskId}/move/${targetListId}`,
+      {
+        method: "PUT",
+      }
     );
-    return response.data;
+
+    if (!response.ok) {
+      console.error(
+        `HTTP error! status: ${response.status} - ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error(`Error moving task: ${error.message}`);
-    throw error;
+    console.error(`Error moving task: ${error}`);
   }
 };
 
