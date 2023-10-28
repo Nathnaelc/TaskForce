@@ -8,7 +8,7 @@ const getAllTodosForList = async (listId) => {
     const result = await db.query(query, values);
 
     if (!result.rows.length) {
-      throw new Error("No todos found for this list.");
+      return [];
     }
 
     return result.rows;
@@ -158,6 +158,71 @@ const addSubtask = async (subtaskData) => {
   }
 };
 
+// Update the 'is_completed' status of a task for parent tasks
+const toggleParentTaskCompletion = async (taskId, isCompleted) => {
+  try {
+    const query = `UPDATE tasks SET is_completed = $1 WHERE task_id = $2 RETURNING *`;
+    const values = [isCompleted, taskId];
+    const result = await db.query(query, values);
+
+    if (result.rows.length === 0) {
+      throw new Error("No task found with the given ID to update.");
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    throw new Error(`Database Error: ${error.message}`);
+  }
+};
+
+// Recursively delete subtasks
+const deleteSubTasks = async (taskId) => {
+  try {
+    const subTasks = await getSubTasks(taskId);
+    for (let subTask of subTasks) {
+      await deleteSubTasks(subTask.task_id);
+    }
+    await deleteTodo(taskId);
+  } catch (error) {
+    throw new Error(`Database Error: ${error.message}`);
+  }
+};
+
+// Recursive function to update 'list_id' for subtasks
+const updateSubTasksListId = async (client, parentTaskId, targetListId) => {
+  const subTasks = await getSubTasks(parentTaskId);
+  for (const subTask of subTasks) {
+    await client.query("UPDATE tasks SET list_id = $1 WHERE task_id = $2", [
+      targetListId,
+      subTask.task_id,
+    ]);
+    await updateSubTasksListId(client, subTask.task_id, targetListId);
+  }
+};
+
+const moveTaskToList = async (taskId, targetListId) => {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
+    // Update the task
+    await client.query("UPDATE tasks SET list_id = $1 WHERE task_id = $2", [
+      targetListId,
+      taskId,
+    ]);
+
+    // Update all subtasks recursively
+    await updateSubTasksListId(client, taskId, targetListId);
+
+    await client.query("COMMIT");
+  } catch (e) {
+    await client.query("ROLLBACK");
+    throw e;
+  } finally {
+    client.release();
+  }
+};
+
 // export the functions
 module.exports = {
   getAllTodosForList,
@@ -168,4 +233,7 @@ module.exports = {
   getSubTasks,
   getTodoAndSubTasks,
   addSubtask,
+  toggleParentTaskCompletion,
+  deleteSubTasks,
+  moveTaskToList,
 };

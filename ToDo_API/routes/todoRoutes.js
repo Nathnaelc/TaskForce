@@ -142,15 +142,57 @@ router.get("/:taskId/withSubTasks", async (req, res) => {
 // Get all todos for a list
 router.get("/lists/:listId/todos", async (req, res) => {
   try {
-    // console.log("here in todoRoutes");
     const todos = await Todo.getAllTodosForList(req.params.listId);
     if (!todos.length) {
-      return res.status(404).send("No todos found for this list.");
+      return res.status(200).json([]);
     }
     res.json(todos);
   } catch (error) {
-    console.error("Error fetching todos:", error); // log detailed error
+    console.error("Error fetching todos:", error);
     res.status(500).json({ error: "Server Error", details: error.message });
+  }
+});
+
+// Update the 'is_completed' status of a task
+router.put("/:taskId/toggleCompletion", async (req, res) => {
+  try {
+    const updatedTodo = await Todo.toggleParentTaskCompletion(
+      req.params.taskId,
+      req.body.isCompleted
+    );
+
+    if (!updatedTodo) {
+      return res.status(404).send("No task found with the given ID to update.");
+    }
+
+    res.json(updatedTodo);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error", details: error.message });
+  }
+});
+
+// Delete a subtask with its children recursively
+router.delete("/taskWithSubtasks/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+  try {
+    await Todo.deleteSubTasks(taskId);
+    res
+      .status(200)
+      .json({ message: "Task and subtasks deleted successfully." });
+  } catch (error) {
+    console.error("Server Error:", error);
+    res.status(500).json({ error: "Server Error", details: error.message });
+  }
+});
+
+// Move a task to a different list
+router.put("/tasks/:taskId/move/:targetListId", async (req, res) => {
+  try {
+    const { taskId, targetListId } = req.params;
+    await Todo.moveTaskToList(taskId, targetListId);
+    res.status(200).send("Task moved successfully");
+  } catch (e) {
+    res.status(500).send("Server error");
   }
 });
 

@@ -126,6 +126,49 @@ const getTodoWithSubtasks = async (taskId) => {
   }
 };
 
+// toggle Parent task completion
+const toggleTaskCompletion = async (taskId, isCompleted) => {
+  const response = await fetch(
+    `${BASE_URL}/api/todos/${taskId}/toggleCompletion`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isCompleted }),
+    }
+  );
+  if (response.ok) {
+    return await response.json();
+  } else {
+    const message = await response.text();
+    throw new Error(message);
+  }
+};
+
+// delete a subtask with subtasks
+const deleteTaskWithSubTasks = async (taskId) => {
+  const response = await fetch(
+    `${BASE_URL}/api/todos/taskWithSubtasks/${taskId}`,
+    {
+      method: "DELETE",
+    }
+  );
+  const data = await response.json();
+  return data;
+};
+
+// move a task to a different list
+const moveTaskToList = async (taskId, targetListId) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/todos/tasks/${taskId}/move/${targetListId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error moving task: ${error.message}`);
+    throw error;
+  }
+};
+
 export {
   fetchTodoLists,
   addNewList,
@@ -134,4 +177,7 @@ export {
   addTodo,
   addSubtaskAPI,
   getTodoWithSubtasks,
+  toggleTaskCompletion,
+  deleteTaskWithSubTasks,
+  moveTaskToList,
 };
