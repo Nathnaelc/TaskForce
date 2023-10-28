@@ -4,8 +4,15 @@ import { useTodoContext } from "../../contexts/TodoContext";
 import { getTodoAndSubTasks } from "../../utils/api";
 
 const TodoList = () => {
-  const { todos, addTask, selectedList, selectTask, lists, moveTask } =
-    useTodoContext();
+  const {
+    todos,
+    addTask,
+    selectedList,
+    setSelectedList,
+    selectTask,
+    lists,
+    moveTask,
+  } = useTodoContext();
   const [newTaskName, setNewTaskName] = useState("");
   const [activeTodoId, setActiveTodoId] = useState(null);
   const [isCompletedSectionOpen, setCompletedSectionOpen] = useState(false);
@@ -32,6 +39,8 @@ const TodoList = () => {
   const handleMoveTask = async (taskId, newListId) => {
     if (newListId !== selectedList.list_id) {
       await moveTask(taskId, newListId);
+      const newSelectedList = lists.find((list) => list.list_id === newListId);
+      setSelectedList(newSelectedList);
     }
   };
 
@@ -75,10 +84,11 @@ const TodoList = () => {
                 <TodoItem todo={todo} />
                 {/* Dropdown to move task */}
                 <select
+                  defaultValue=""
                   onChange={(e) => handleMoveTask(todo.task_id, e.target.value)}
-                  style={{ float: "right", marginTop: "-25px" }}
+                  className="float-right mt-[-25px] bg-white dark:bg-gray-700 dark:text-white text-black rounded border border-gray-300 dark:border-gray-500"
                 >
-                  <option value="" disabled selected>
+                  <option value="" disabled>
                     Move to list
                   </option>
                   {lists.map((list) => (
