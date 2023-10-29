@@ -45,6 +45,14 @@ const pool = new Pool({
 
 // Log the database URL to the console
 console.log("Database URL: " + getDatabaseUrl().connectionString);
+console.log(
+  "Environment Variables:",
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASS,
+  process.env.DATABASE_HOST,
+  process.env.DATABASE_PORT,
+  process.env.DATABASE_NAME
+);
 
 // Export the BYCRYPT_SALT_ROUNDS constant, getDatabaseUrl function, pool object, and query function
 module.exports = {

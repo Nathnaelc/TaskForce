@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { TodoProvider } from "./contexts/TodoContext";
 import { AuthProvider, AuthContext } from "./contexts/AuthContext";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route,
   Navigate,
