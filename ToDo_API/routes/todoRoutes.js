@@ -1,5 +1,6 @@
 /**
  * This module defines the routes for the Todo API and provide for my API.js in react.
+ * Since it handles conceptually similar functions or CRUD operations, it is grouped together in a single file.
  * It exports an Express router instance that can be mounted on a path in the main app.
  * @module routes/todoRoutes
  */
@@ -83,31 +84,6 @@ router.post("/addtodo", async (req, res) => {
     } else {
       res.status(500).send(`Server Error: ${error.message}`);
     }
-  }
-});
-
-/**
- * Route to update a task.
- * @name PUT /api/:taskId/edit
- * @function
- * @memberof module:routes/todoRoutes
- * @param {string} taskId - The ID of the task to update.
- * @param {Object} req.body - The updated task object.
- * @returns {Object} The updated task object.
- * @throws {404} If no task is found with the given ID to update.
- * @throws {500} If there is a server error.
- */
-router.put("/:taskId/edit", async (req, res) => {
-  try {
-    const updatedTodo = await Todo.updateTodo(req.params.taskId, req.body);
-
-    if (!updatedTodo) {
-      return res.status(404).send("No task found with the given ID to update.");
-    }
-
-    res.json(updatedTodo);
-  } catch (error) {
-    res.status(500).json({ error: "Server Error", details: error.message });
   }
 });
 

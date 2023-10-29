@@ -1,5 +1,7 @@
 // This module exports functions to interact with the 'tasks' table in the database.
+// Since it handles conceptually similar functions or SQL operations on tasks, it is grouped together in a single file.
 
+// import the pool object and query function from the db module
 const db = require("../db/db");
 const { pool } = require("../db/db");
 
