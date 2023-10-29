@@ -2,7 +2,7 @@ import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3001";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 export const AuthContext = createContext();
 
 /**
@@ -32,30 +32,41 @@ export const AuthProvider = ({ children }) => {
    */
   const register = async ({ email, fullName, password }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/auth/register`, {
-        email,
-        fullName,
-        password,
+      const response = await fetch(`${BASE_URL}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          fullName,
+          password,
+        }),
       });
 
-      // Check if the status code is in the 200s to ensure success
-      if (response.status >= 200 && response.status < 300) {
-        setUserData(response.data.user);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("userId", response.data.user.user_id);
+      const data = await response.json();
+
+      if (response.ok) {
+        // HTTP status code in the range 200-299
+        setUserData(data.user);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("userId", data.user.user_id);
 
         setIsLoggedIn(true);
-        return { success: true, message: response.data.message };
+        return { success: true, message: data.message };
       } else {
-        console.error("Registration failed:", response.data.message);
-        return { success: false, message: response.data.message };
+        console.error("Registration failed:", data.message);
+        return {
+          success: false,
+          message: "Registration failed. Please try again later.",
+        };
       }
     } catch (error) {
       console.error("Error during registration:", error);
       return {
         success: false,
-        message: error.message || "Error during registration",
+        message: "An unexpected error occurred. Please try again later.",
       };
     }
   };

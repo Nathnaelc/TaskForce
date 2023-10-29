@@ -31,28 +31,24 @@ function getDatabaseUrl() {
   // Get the database name from the DATABASE_NAME environment variable or use "todo_app" as the default
   const dbName = process.env.DATABASE_NAME || "todo_app";
 
-  // Return an object with the database URL and SSL options
+  // Check if it is in a production environment
+  const isProduction = process.env.NODE_ENV === "production";
+
   return {
     connectionString: `postgresql://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`,
-    ssl: { rejectUnauthorized: false },
+    ssl: isProduction ? { rejectUnauthorized: false } : false, // Apply SSL only if it's production
   };
 }
 
-// Create a new Pool object with the database URL from getDatabaseUrl
+// Create a new Pool object with the database URL and SSL options from getDatabaseUrl
+const dbConfig = getDatabaseUrl();
 const pool = new Pool({
-  connectionString: getDatabaseUrl().connectionString,
+  connectionString: dbConfig.connectionString,
+  ssl: dbConfig.ssl,
 });
 
 // Log the database URL to the console
-console.log("Database URL: " + getDatabaseUrl().connectionString);
-console.log(
-  "Environment Variables:",
-  process.env.DATABASE_USER,
-  process.env.DATABASE_PASS,
-  process.env.DATABASE_HOST,
-  process.env.DATABASE_PORT,
-  process.env.DATABASE_NAME
-);
+console.log("Database URL: " + dbConfig.connectionString);
 
 // Export the BYCRYPT_SALT_ROUNDS constant, getDatabaseUrl function, pool object, and query function
 module.exports = {
