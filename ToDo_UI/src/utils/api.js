@@ -8,14 +8,19 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
  * @throws {Error} If there was an error fetching the todo lists.
  */
 const fetchTodoLists = async () => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    console.log("User ID not available");
+    return [];
+  }
   try {
-    const userId = localStorage.getItem("userId");
     const response = await axios.get(
       `${BASE_URL}/api/lists/${userId}/getlists`
     );
     return response.data;
   } catch (error) {
-    throw error;
+    console.error("Error fetching todo lists:", error.message);
+    return [];
   }
 };
 

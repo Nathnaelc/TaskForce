@@ -12,7 +12,7 @@ router.get("/:userId/getlists", async (req, res) => {
     const lists = await List.getAllListsForUser(req.params.userId);
     res.json(lists);
   } catch (error) {
-    res.status(500).send(`Server Error: ${error.message}`);
+    res.status(500).json({ message: `Server Error: ${error.message}` });
   }
 });
 

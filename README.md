@@ -50,24 +50,27 @@ The application is built on the PERN stack, comprising PostgreSQL, Express, Reac
 ### Backend (Located in the ToDo_API folder)
 
 1. Clone the repository.
-2. Navigate to the `ToDo_API` folder.
+   `git clone`
+2. Navigate to the `ToDo_API` folder using `cd ToDO_API` command.
 3. Install the necessary npm packages:
    ```bash
    npm install
    ```
-4. Start the server. Make sure it's running on port 3001:
+4. Set up the .env file using `touch .env` and put the JWT_SECRET_KEY = string value such as d6f45a0ger7esdvwfwe3sjhd346wehkjsba98765egr
+5. Start the server. Make sure it's running on port 3001:
    ```bash
    npm start
    ```
 
 ### Frontend (Located in the ToDo_UI folder)
 
-1. Navigate to the `ToDo_UI` folder.
+1. Navigate to the `ToDo_UI` folder using `cd ToDO_UI` command.
 2. Install the necessary npm packages:
    ```bash
    npm install
    ```
-3. Start the application. This will run the app in development mode:
+3. Set up the .env file using `touch .env` and put the VITE_BASE_URL = http://localhost:3001
+4. Start the application. This will run the app in development mode:
    ```bash
    npm run dev
    ```

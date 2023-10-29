@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { TodoProvider } from "./contexts/TodoContext";
 import { AuthProvider, AuthContext } from "./contexts/AuthContext";
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -32,19 +32,22 @@ function AppRoutes() {
   if (isLoading) return <h1>Loading...</h1>;
 
   return (
-    <TodoProvider>
+    <>
       <NavBar
         loggedIn={isLoggedIn}
         setLoggedIn={setIsLoggedIn}
         user={userData}
         setUser={setUserData}
       />
+
       <Routes>
         <Route
           path="/"
           element={
             isLoggedIn ? (
-              <TodoListContainer />
+              <TodoProvider>
+                <TodoListContainer />
+              </TodoProvider>
             ) : (
               <Navigate to="/login" replace />
             )
@@ -76,6 +79,6 @@ function AppRoutes() {
         />
         <Route path="*" element={<h1>404 not found</h1>} />
       </Routes>
-    </TodoProvider>
+    </>
   );
 }
