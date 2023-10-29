@@ -5,12 +5,10 @@ import React from "react";
  * @param {string} error - The error message to be displayed.
  * @returns {JSX.Element} - A div element with the error message as its text content.
  */
-function LoginErrorDisplay({ error }) {
+export default function LoginErrorDisplay({ error }) {
   return (
     <div className="mt-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded-md">
       {error}
     </div>
   );
 }
-
-export default LoginErrorDisplay;

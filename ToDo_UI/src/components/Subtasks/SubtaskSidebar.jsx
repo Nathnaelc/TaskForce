@@ -35,7 +35,7 @@ export default function SubtaskSidebar({ task }) {
     return (
       <aside
         className="flex flex-col p-4 bg-white dark:bg-black text-black dark:text-white overflow-y-auto"
-        style={{ maxHeight: "100vh" }}
+        style={{ height: "100vh", width: "100%" }}
       >
         <h2 className="text-xl mb-4">Subtasks of {task.task_name}</h2>
         <div className="mt-4">

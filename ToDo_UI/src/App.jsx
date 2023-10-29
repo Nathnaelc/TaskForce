@@ -7,13 +7,13 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import RegistrationPage from "./components/Auth/Register/RegistrationPage";
 import RegistrationHandler from "./components/Auth/Register/Registrationhandler";
 import LoginPage from "./components/Auth/Login/LoginPage";
 import LoginHandler from "./components/Auth/Login/LoginHandler";
 import NavBar from "./components/Navbar/Navbar";
-import TodoListContainer from "./components/TodoListContainer/TodoListContainer";
+import TodoListContainer from "./components/WholeContainer/TodoListContainer";
+import "./App.css";
 
 export default function App() {
   return (
@@ -26,8 +26,10 @@ export default function App() {
 }
 
 function AppRoutes() {
-  const { isLoggedIn, setIsLoggedIn, setUserData, userData } =
+  const { isLoggedIn, setIsLoggedIn, setUserData, userData, isLoading } =
     useContext(AuthContext);
+
+  if (isLoading) return <h1>Loading...</h1>;
 
   return (
     <>

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContext";
+import LoginErrorDisplay from "./LoginErrorDisplay";
 
 /**
  * A component that displays a login form and handles the submission of the form.
@@ -10,7 +12,7 @@ export default function LoginPage({ handleLoginSubmit }) {
   // Set up state for the email, password, and login error
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
+  const { loginError } = useAuth();
 
   // Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ export default function LoginPage({ handleLoginSubmit }) {
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
       <div className="p-8 rounded shadow-md bg-white dark:bg-gray-800 w-96">
         <h1 className="text-2xl mb-3 font-bold text-blue-500 text-center">
-          Login to Your Account
+          Login to taskforce
         </h1>
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="mb-4">
@@ -57,7 +59,7 @@ export default function LoginPage({ handleLoginSubmit }) {
           </div>
 
           {/* Display the login error if there is one */}
-          {loginError && <p className="text-red-600">{loginError}</p>}
+          {loginError && <LoginErrorDisplay error={loginError} />}
 
           <div className="flex items-center justify-center">
             <button

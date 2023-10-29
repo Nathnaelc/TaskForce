@@ -212,27 +212,32 @@ export const TodoProvider = ({ children }) => {
       };
       const addedSubtask = await addSubtaskAPI(parentId, newSubtask);
 
-      // Deep clone selectedTask
-      const newSelectedTask = JSON.parse(JSON.stringify(selectedTask));
-
-      // Function to recursively find the parent task and add the subtask
       const addSubtaskToParent = (task, parentId) => {
+        if (!task.subTasks) {
+          task.subTasks = [];
+        }
         if (task.task_id === parentId) {
           task.subTasks.push(addedSubtask);
-          return true;
+          return;
         }
         for (const subtask of task.subTasks) {
-          if (addSubtaskToParent(subtask, parentId)) {
-            return true;
-          }
+          addSubtaskToParent(subtask, parentId);
         }
-        return false;
       };
 
-      addSubtaskToParent(newSelectedTask, parentId);
+      setTodos((prevTodos) => {
+        const deepClone = JSON.parse(JSON.stringify(prevTodos));
+        for (const todo of deepClone) {
+          addSubtaskToParent(todo, parentId);
+        }
+        return deepClone;
+      });
 
-      // Update the state
-      setSelectedTask(newSelectedTask);
+      setSelectedTask((prevSelectedTask) => {
+        const deepClone = JSON.parse(JSON.stringify(prevSelectedTask));
+        addSubtaskToParent(deepClone, parentId);
+        return deepClone;
+      });
 
       await refreshTasks(listId);
     } catch (error) {

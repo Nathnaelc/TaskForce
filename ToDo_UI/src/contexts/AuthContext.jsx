@@ -14,12 +14,15 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
     }
+    setIsLoading(false);
   }, []);
 
   /**
@@ -87,11 +90,14 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("user", JSON.stringify(userData));
         setUserData(userData);
         setIsLoggedIn(true);
+        setLoginError("");
         return { success: true };
       } else {
+        setLoginError(data.message);
         return { error: data.message };
       }
     } catch (error) {
+      setLoginError("Network error. Please try again.");
       return { error: "Network error. Please try again." };
     }
   };
@@ -105,6 +111,10 @@ export const AuthProvider = ({ children }) => {
         setIsLoggedIn,
         register,
         login,
+        loginError,
+        setLoginError,
+        setIsLoggedIn,
+        isLoading,
       }}
     >
       {children}
