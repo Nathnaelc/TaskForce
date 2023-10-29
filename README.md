@@ -1,6 +1,9 @@
 # Taskforce: A Hierarchical Todo List App
 
-[![Click here to check the Deployed app on Render](https://img.shields.io/badge/Click%20here%20to%20check%20the%20Deployed%20app%20on-Render-blue)](https://taskforceui.onrender.com/)
+[The repository can be found here](https://github.com/Nathnaelc/TaskForce):
+I suggest cloning the repository to interact with it than using the folders in the repo.
+
+# [![Click here to check the Deployed app on Render](https://img.shields.io/badge/Click%20here%20to%20check%20the%20Deployed%20app%20on-Render-blue)](https://taskforceui.onrender.com/)
 
 ## Table of Contents
 
@@ -57,7 +60,8 @@ The application is built on the PERN stack, comprising PostgreSQL, Express, Reac
    npm install
    ```
 4. Set up the .env file using `touch .env` and put the JWT_SECRET_KEY = string value such as d6f45a0ger7esdvwfwe3sjhd346wehkjsba98765egr
-5. Start the server. Make sure it's running on port 3001:
+5. Create a new database server on Postgres called `TodoApp` and create a database named `todo_app` then run the `create_tables.sql` in Schemas folder against the database.
+6. Start the server. Make sure it's running on port 3001:
    ```bash
    npm start
    ```
