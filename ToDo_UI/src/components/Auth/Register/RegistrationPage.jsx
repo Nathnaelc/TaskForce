@@ -1,19 +1,34 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+/**
+ * A component that displays a registration form and handles its submission.
+ * @param {function} handleRegistrationSubmit - A function that handles the registration submit event.
+ * @returns {ReactElement} - A registration form with input fields for full name, email, password, and confirm password.
+ */
 export default function RegistrationPage({ handleRegistrationSubmit }) {
+  // Set up state variables for the input fields and password error
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+
+  // Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
 
+  /**
+   * Handles the registration submit event.
+   * @param {object} e - The event object.
+   */
   const onSubmit = (e) => {
     e.preventDefault();
+
+    // If the password and confirm password fields do not match, set the password error to true
     if (password !== confirmPassword) {
       setPasswordError(true);
     } else {
+      // Otherwise, set the password error to false and call the handleRegistrationSubmit function with the input field values and navigate function
       setPasswordError(false);
       handleRegistrationSubmit({
         fullName,
@@ -24,6 +39,7 @@ export default function RegistrationPage({ handleRegistrationSubmit }) {
     }
   };
 
+  // Return the registration form with input fields for full name, email, password, and confirm password
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
       <div className="p-8 rounded shadow-md bg-white dark:bg-gray-800 w-96">

@@ -1,8 +1,23 @@
+/**
+ * This module defines the routes for the Todo API and provide for my API.js in react.
+ * It exports an Express router instance that can be mounted on a path in the main app.
+ * @module routes/todoRoutes
+ */
+
 const express = require("express");
 const Todo = require("../models/todoModel");
 const router = express.Router();
 
-// Get all todos for a user
+/**
+ * Route to get all todos for a user.
+ * @name GET /api/:userId/todos
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} userId - The ID of the user to get todos for.
+ * @returns {Object[]} An array of todo objects for the given user.
+ * @throws {404} If no todos are found for the given user.
+ * @throws {500} If there is a server error.
+ */
 router.get("/:userId/todos", async (req, res) => {
   try {
     const todos = await Todo.getAllTodosForUser(req.params.userId);
@@ -15,7 +30,16 @@ router.get("/:userId/todos", async (req, res) => {
   }
 });
 
-// Get a single todo by id
+/**
+ * Route to get a single todo by id.
+ * @name GET /api/todo/:taskId
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} taskId - The ID of the todo to get.
+ * @returns {Object} The todo object with the given ID.
+ * @throws {404} If no todo is found with the given ID.
+ * @throws {500} If there is a server error.
+ */
 router.get("/todo/:taskId", async (req, res) => {
   try {
     const todo = await Todo.getTodoById(req.params.taskId);
@@ -28,7 +52,16 @@ router.get("/todo/:taskId", async (req, res) => {
   }
 });
 
-// Add a new parent task
+/**
+ * Route to add a new parent task.
+ * @name POST /api/addtodo
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {Object} req.body - The todo object to add.
+ * @returns {Object} The newly added todo object.
+ * @throws {400} If the provided list ID or user ID does not exist.
+ * @throws {500} If there is a server error.
+ */
 router.post("/addtodo", async (req, res) => {
   try {
     const newTodo = await Todo.addTodo(req.body);
@@ -53,6 +86,17 @@ router.post("/addtodo", async (req, res) => {
   }
 });
 
+/**
+ * Route to update a task.
+ * @name PUT /api/:taskId/edit
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} taskId - The ID of the task to update.
+ * @param {Object} req.body - The updated task object.
+ * @returns {Object} The updated task object.
+ * @throws {404} If no task is found with the given ID to update.
+ * @throws {500} If there is a server error.
+ */
 router.put("/:taskId/edit", async (req, res) => {
   try {
     const updatedTodo = await Todo.updateTodo(req.params.taskId, req.body);
@@ -67,7 +111,16 @@ router.put("/:taskId/edit", async (req, res) => {
   }
 });
 
-// Delete a task
+/**
+ * Route to delete a task.
+ * @name DELETE /api/todo/:taskId
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} taskId - The ID of the task to delete.
+ * @returns {Object} The deleted task object.
+ * @throws {404} If no task is found with the given ID to delete.
+ * @throws {500} If there is a server error.
+ */
 router.delete("/todo/:taskId", async (req, res) => {
   try {
     const deletedTodo = await Todo.deleteTodo(req.params.taskId);
@@ -82,7 +135,16 @@ router.delete("/todo/:taskId", async (req, res) => {
   }
 });
 
-// simply retrieves the subtasks of a given task
+/**
+ * Route to retrieve the subtasks of a given task.
+ * @name GET /api/:taskId/subtasks
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} taskId - The ID of the task to get subtasks for.
+ * @returns {Object[]} An array of subtask objects for the given task.
+ * @throws {404} If no subtasks are found for the given task ID.
+ * @throws {500} If there is a server error.
+ */
 router.get("/:taskId/subtasks", async (req, res) => {
   try {
     const subTasks = await Todo.getSubTasks(req.params.taskId);
@@ -97,7 +159,17 @@ router.get("/:taskId/subtasks", async (req, res) => {
   }
 });
 
-// adds a subtask to a given task
+/**
+ * Route to add a subtask to a given task.
+ * @name POST /api/:taskId/addSubtask
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} taskId - The ID of the task to add a subtask to.
+ * @param {Object} req.body - The subtask object to add.
+ * @returns {Object} The newly added subtask object.
+ * @throws {400} If the parent task ID is invalid.
+ * @throws {500} If there is a server error.
+ */
 router.post("/:taskId/addSubtask", async (req, res) => {
   try {
     const parentTaskId = req.params.taskId;
@@ -118,7 +190,16 @@ router.post("/:taskId/addSubtask", async (req, res) => {
   }
 });
 
-// retrieves a task and its entire hierarchy of subtasks recursively
+/**
+ * Route to retrieve a task and its entire hierarchy of subtasks recursively.
+ * @name GET /api/:taskId/withSubTasks
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} taskId - The ID of the task to get and its subtasks.
+ * @returns {Object} The task object with its subtasks recursively.
+ * @throws {404} If no task is found with the given ID.
+ * @throws {500} If there is a server error.
+ */
 router.get("/:taskId/withSubTasks", async (req, res) => {
   try {
     console.log("Task ID:", req.params.taskId);
@@ -139,7 +220,15 @@ router.get("/:taskId/withSubTasks", async (req, res) => {
   }
 });
 
-// Get all todos for a list
+/**
+ * Route to get all todos for a list.
+ * @name GET /api/lists/:listId/todos
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} listId - The ID of the list to get todos for.
+ * @returns {Object[]} An array of todo objects for the given list.
+ * @throws {500} If there is a server error.
+ */
 router.get("/lists/:listId/todos", async (req, res) => {
   try {
     const todos = await Todo.getAllTodosForList(req.params.listId);
@@ -153,7 +242,17 @@ router.get("/lists/:listId/todos", async (req, res) => {
   }
 });
 
-// Update the 'is_completed' status of a task
+/**
+ * Route to update the 'is_completed' status of a task.
+ * @name PUT /api/:taskId/toggleCompletion
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} taskId - The ID of the task to update.
+ * @param {Object} req.body - The updated task object with the 'isCompleted' property.
+ * @returns {Object} The updated task object.
+ * @throws {404} If no task is found with the given ID to update.
+ * @throws {500} If there is a server error.
+ */
 router.put("/:taskId/toggleCompletion", async (req, res) => {
   try {
     const updatedTodo = await Todo.toggleParentTaskCompletion(
@@ -171,7 +270,15 @@ router.put("/:taskId/toggleCompletion", async (req, res) => {
   }
 });
 
-// Delete a subtask with its children recursively
+/**
+ * Route to delete a subtask with its children recursively.
+ * @name DELETE /api/taskWithSubtasks/:taskId
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} taskId - The ID of the subtask to delete.
+ * @returns {Object} A success message.
+ * @throws {500} If there is a server error.
+ */
 router.delete("/taskWithSubtasks/:taskId", async (req, res) => {
   const { taskId } = req.params;
   try {
@@ -185,7 +292,16 @@ router.delete("/taskWithSubtasks/:taskId", async (req, res) => {
   }
 });
 
-// Move a task to a different list
+/**
+ * Route to move a task to a different list.
+ * @name PUT /api/tasks/:taskId/move/:targetListId
+ * @function
+ * @memberof module:routes/todoRoutes
+ * @param {string} taskId - The ID of the task to move.
+ * @param {string} targetListId - The ID of the list to move the task to.
+ * @returns {string} A success message.
+ * @throws {500} If there is a server error.
+ */
 router.put("/tasks/:taskId/move/:targetListId", async (req, res) => {
   try {
     const { taskId, targetListId } = req.params;
@@ -197,4 +313,5 @@ router.put("/tasks/:taskId/move/:targetListId", async (req, res) => {
   }
 });
 
+// export the router
 module.exports = router;

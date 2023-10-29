@@ -5,6 +5,12 @@ import jwt_decode from "jwt-decode";
 const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3001";
 export const AuthContext = createContext();
 
+/**
+ * A component that provides authentication context to its children.
+ * @param {Object} props - The component props.
+ * @param {ReactNode} props.children - The child components to render.
+ * @returns {ReactElement} - The authentication provider component.
+ */
 export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,6 +22,11 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  /**
+   * A function to register a new user.
+   * @param {Object} user - The user object containing email, fullName, and password.
+   * @returns {Object} - An object containing success status and message.
+   */
   const register = async ({ email, fullName, password }) => {
     try {
       const response = await axios.post(`${BASE_URL}/api/auth/register`, {
@@ -45,7 +56,13 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
-  const login = async ({ email, password, navigate }) => {
+
+  /**
+   * A function to log in a user.
+   * @param {Object} credentials - The user credentials object containing email and password.
+   * @returns {Object} - An object containing success status or error message.
+   */
+  const login = async ({ email, password }) => {
     try {
       const response = await fetch(`${BASE_URL}/api/auth/login`, {
         method: "POST",
@@ -95,6 +112,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+/**
+ * A hook that returns the authentication context.
+ * @returns {Object} - The authentication context.
+ */
 export const useAuth = () => {
   return useContext(AuthContext);
 };

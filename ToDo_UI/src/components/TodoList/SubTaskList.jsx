@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { useTodoContext } from "../../contexts/TodoContext";
 
+/**
+ * A component that displays a list of subtasks for a given task.
+ * @param {object} task - The task object that contains the subtasks.
+ * @param {number} depth - The depth of the subtask list in the hierarchy.
+ * @returns {ReactElement} - The subtask list component.
+ */
 export default function SubtaskComponent({ task, depth = 0 }) {
   const [isAddingSubtask, setIsAddingSubtask] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
@@ -12,6 +18,9 @@ export default function SubtaskComponent({ task, depth = 0 }) {
 
   const subTasks = task?.subTasks || [];
 
+  /**
+   * A function to handle adding a new subtask to the task.
+   */
   const handleAddSubtask = () => {
     if (task && task.task_id) {
       addSubtask(task.list_id, task.task_id, newSubtask);
@@ -20,22 +29,35 @@ export default function SubtaskComponent({ task, depth = 0 }) {
     }
   };
 
+  /**
+   * A function to handle confirming the deletion of the task and its subtasks.
+   */
   const handleConfirmDelete = async () => {
     await deleteTaskAndSubtasks(task.task_id);
     setIsDeleted(true);
     setConfirmationModalOpen(false);
   };
 
+  /**
+   * A function to handle clicking the "Complete" button for the task.
+   */
   const handleCompleteClick = () => {
     setConfirmationModalOpen(true);
   };
 
+  /**
+   * A function to handle the "Enter" key press event on the new subtask input field.
+   * @param {object} e - The key press event object.
+   */
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleAddSubtask();
     }
   };
 
+  /**
+   * A function to toggle the expansion state of the subtask list.
+   */
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };

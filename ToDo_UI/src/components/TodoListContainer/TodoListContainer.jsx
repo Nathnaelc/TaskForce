@@ -3,12 +3,18 @@ import TodoListSidebar from "./SideListContainer";
 import TaskWrapper from "./TaskWrapper";
 import { useTodoContext } from "../../contexts/TodoContext";
 
+/**
+ * A component that displays the TodoListSidebar and TaskWrapper components and handles loading and error states.
+ * @returns {ReactElement} - The todo list container component.
+ */
 export default function TodoListContainer() {
   const { loading, error } = useTodoContext();
   const [showLoading, setShowLoading] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
-  // Function to handle updates in localStorage
+  /**
+   * A function to handle updates in localStorage and set the isDark state accordingly.
+   */
   const handleStorageChange = () => {
     const darkModeStatus = localStorage.getItem("darkMode");
     setIsDark(darkModeStatus === "enabled");

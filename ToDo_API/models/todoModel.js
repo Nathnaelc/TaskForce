@@ -1,24 +1,32 @@
+// This module exports functions to interact with the 'tasks' table in the database.
+
 const db = require("../db/db");
 const { pool } = require("../db/db");
 
-// This function should retrieve all todos for a user with a given list ID
+/**
+ * Retrieve all todos for a user with a given list ID.
+ * @param {number} listId - The ID of the list to retrieve todos for.
+ * @returns {Promise<Array>} - A promise that resolves to an array of todos for the given list ID.
+ * @throws {Error} - If there is an error retrieving the todos from the database.
+ */
 const getAllTodosForList = async (listId) => {
   try {
-    const query = "SELECT * FROM tasks WHERE list_id = $1"; // Updated column name to list_id
+    const query = "SELECT * FROM tasks WHERE list_id = $1";
     const values = [listId];
     const result = await db.query(query, values);
-
-    if (!result.rows.length) {
-      return [];
-    }
-
-    return result.rows;
+    return result.rows.length ? result.rows : [];
   } catch (error) {
+    console.error("Database Error:", error.message); // Log errors only to console
     throw new Error(`Database Error: ${error.message}`);
   }
 };
 
-// recursive function to get todo and subtasks
+/**
+ * Recursive function to get todo and subtasks.
+ * @param {number} taskId - The ID of the task to retrieve.
+ * @returns {Promise<Object>} - A promise that resolves to an object representing the task and its subtasks.
+ * @throws {Error} - If there is an error retrieving the task from the database.
+ */
 const getTodoAndSubTasks = async (taskId) => {
   if (!taskId) {
     throw new Error("Invalid Task ID provided.");
@@ -50,7 +58,12 @@ const getTodoAndSubTasks = async (taskId) => {
   }
 };
 
-// get todos by id
+/**
+ * Get a todo by its ID.
+ * @param {number} taskId - The ID of the task to retrieve.
+ * @returns {Promise<Object>} - A promise that resolves to an object representing the task.
+ * @throws {Error} - If there is an error retrieving the task from the database.
+ */
 const getTodoById = async (taskId) => {
   try {
     const query = "SELECT * FROM tasks WHERE task_id = $1";
@@ -67,7 +80,12 @@ const getTodoById = async (taskId) => {
   }
 };
 
-// add todo into tasks table
+/**
+ * Add a todo to the 'tasks' table.
+ * @param {Object} todoData - An object containing the data for the new todo.
+ * @returns {Promise<Object>} - A promise that resolves to an object representing the newly added todo.
+ * @throws {Error} - If there is an error adding the todo to the database.
+ */
 const addTodo = async (todoData) => {
   try {
     const query = `INSERT INTO tasks (list_id, parent_task_id, user_id, task_name) VALUES ($1, $2, $3, $4) RETURNING *`;
@@ -90,7 +108,13 @@ const addTodo = async (todoData) => {
   }
 };
 
-// update todo by id
+/**
+ * Update a todo in the 'tasks' table.
+ * @param {number} taskId - The ID of the task to update.
+ * @param {Object} updateData - An object containing the data to update the todo with.
+ * @returns {Promise<Object>} - A promise that resolves to an object representing the updated todo.
+ * @throws {Error} - If there is an error updating the todo in the database.
+ */
 const updateTodo = async (taskId, updateData) => {
   try {
     const query = `UPDATE tasks SET task_name = $1, is_completed = $2 WHERE task_id = $3 RETURNING *`;
@@ -107,7 +131,12 @@ const updateTodo = async (taskId, updateData) => {
   }
 };
 
-// delete todo by id
+/**
+ * Delete a todo from the 'tasks' table.
+ * @param {number} taskId - The ID of the task to delete.
+ * @returns {Promise<Object>} - A promise that resolves to an object representing the deleted todo.
+ * @throws {Error} - If there is an error deleting the todo from the database.
+ */
 const deleteTodo = async (taskId) => {
   try {
     const query = "DELETE FROM tasks WHERE task_id = $1 RETURNING *";
@@ -124,7 +153,12 @@ const deleteTodo = async (taskId) => {
   }
 };
 
-// get subtasks
+/**
+ * Get all subtasks for a given task ID.
+ * @param {number} taskId - The ID of the task to retrieve subtasks for.
+ * @returns {Promise<Array>} - A promise that resolves to an array of subtasks for the given task ID.
+ * @throws {Error} - If there is an error retrieving the subtasks from the database.
+ */
 const getSubTasks = async (taskId) => {
   try {
     const query = "SELECT * FROM tasks WHERE parent_task_id = $1";
@@ -138,7 +172,12 @@ const getSubTasks = async (taskId) => {
   }
 };
 
-// add subtask
+/**
+ * Add a subtask to the 'tasks' table.
+ * @param {Object} subtaskData - An object containing the data for the new subtask.
+ * @returns {Promise<Object>} - A promise that resolves to an object representing the newly added subtask.
+ * @throws {Error} - If there is an error adding the subtask to the database.
+ */
 const addSubtask = async (subtaskData) => {
   try {
     const query =
@@ -159,7 +198,13 @@ const addSubtask = async (subtaskData) => {
   }
 };
 
-// Update the 'is_completed' status of a task for parent tasks
+/**
+ * Update the 'is_completed' status of a task for parent tasks.
+ * @param {number} taskId - The ID of the task to update.
+ * @param {boolean} isCompleted - The new value for the 'is_completed' field.
+ * @returns {Promise<Object>} - A promise that resolves to an object representing the updated task.
+ * @throws {Error} - If there is an error updating the task in the database.
+ */
 const toggleParentTaskCompletion = async (taskId, isCompleted) => {
   try {
     const query = `UPDATE tasks SET is_completed = $1 WHERE task_id = $2 RETURNING *`;
@@ -176,7 +221,11 @@ const toggleParentTaskCompletion = async (taskId, isCompleted) => {
   }
 };
 
-// Recursively delete subtasks
+/**
+ * Recursively delete subtasks for a given task ID.
+ * @param {number} taskId - The ID of the task to delete subtasks for.
+ * @throws {Error} - If there is an error deleting the subtasks from the database.
+ */
 const deleteSubTasks = async (taskId) => {
   try {
     const subTasks = await getSubTasks(taskId);
@@ -189,7 +238,13 @@ const deleteSubTasks = async (taskId) => {
   }
 };
 
-// Recursive function to update 'list_id' for subtasks
+/**
+ * Recursive function to update 'list_id' for subtasks.
+ * @param {Object} client - The database client to use for the transaction.
+ * @param {number} parentTaskId - The ID of the parent task to update subtasks for.
+ * @param {number} targetListId - The ID of the list to move the subtasks to.
+ * @throws {Error} - If there is an error updating the subtasks in the database.
+ */
 const updateSubTasksListId = async (client, parentTaskId, targetListId) => {
   const subTasks = await getSubTasks(parentTaskId);
   for (const subTask of subTasks) {
@@ -201,6 +256,12 @@ const updateSubTasksListId = async (client, parentTaskId, targetListId) => {
   }
 };
 
+/**
+ * Move a task to a new list.
+ * @param {number} taskId - The ID of the task to move.
+ * @param {number} targetListId - The ID of the list to move the task to.
+ * @throws {Error} - If there is an error moving the task in the database.
+ */
 const moveTaskToList = async (taskId, targetListId) => {
   const client = await pool.connect();
   try {
@@ -224,7 +285,7 @@ const moveTaskToList = async (taskId, targetListId) => {
   }
 };
 
-// export the functions
+// Export the functions
 module.exports = {
   getAllTodosForList,
   getTodoById,

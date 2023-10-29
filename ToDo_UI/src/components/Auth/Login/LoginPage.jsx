@@ -1,14 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+/**
+ * A component that displays a login form and handles the submission of the form.
+ * @param {object} handleLoginSubmit - A function that handles the submission of the login form.
+ * @returns {ReactElement} - A login form.
+ */
 export default function LoginPage({ handleLoginSubmit }) {
+  // Set up state for the email, password, and login error
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+
+  // Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
 
+  /**
+   * Handles the submission of the login form.
+   * @param {object} e - The form submission event.
+   */
   const onSubmit = async (e) => {
     e.preventDefault();
+    // Call the handleLoginSubmit function with the email, password, and navigate properties
     handleLoginSubmit({
       email,
       password,
@@ -16,6 +29,7 @@ export default function LoginPage({ handleLoginSubmit }) {
     });
   };
 
+  // Return the login form
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
       <div className="p-8 rounded shadow-md bg-white dark:bg-gray-800 w-96">
@@ -42,6 +56,7 @@ export default function LoginPage({ handleLoginSubmit }) {
             />
           </div>
 
+          {/* Display the login error if there is one */}
           {loginError && <p className="text-red-600">{loginError}</p>}
 
           <div className="flex items-center justify-center">

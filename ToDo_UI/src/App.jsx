@@ -7,8 +7,6 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-// import CompletedTasks from "./components/CompletedTasks";
-// import DragDropWrapper from "./components/DragDropWrapper/DragDropWrapper";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import RegistrationPage from "./components/Auth/Register/RegistrationPage";
 import RegistrationHandler from "./components/Auth/Register/Registrationhandler";
@@ -16,7 +14,6 @@ import LoginPage from "./components/Auth/Login/LoginPage";
 import LoginHandler from "./components/Auth/Login/LoginHandler";
 import NavBar from "./components/Navbar/Navbar";
 import TodoListContainer from "./components/TodoListContainer/TodoListContainer";
-import TaskWrapper from "./components/TodoListContainer/TaskWrapper";
 
 export default function App() {
   return (
@@ -78,7 +75,6 @@ function AppRoutes() {
             )
           }
         />
-
         <Route path="*" element={<h1>404 not found</h1>} />
       </Routes>
     </>

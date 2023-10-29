@@ -3,6 +3,10 @@ import { useTodoContext } from "../../contexts/TodoContext";
 import TodoList from "../TodoList/TodoList";
 import SubtaskSidebar from "../Subtasks/SubtaskSidebar";
 
+/**
+ * A component that wraps the TodoList and SubtaskSidebar components and displays the selected task's subtasks.
+ * @returns {ReactElement} - The task wrapper component.
+ */
 export default function TaskWrapper() {
   const { selectedTask } = useTodoContext();
 

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useTodoContext } from "../../contexts/TodoContext";
 
+/**
+ * A component that displays the list of todo lists and allows the user to add new lists.
+ * @returns {ReactElement} - The todo list sidebar component.
+ */
 export default function TodoListSidebar() {
   const { lists, selectedList, setSelectedList, addList, noListsAvailable } =
     useTodoContext();
@@ -11,17 +15,25 @@ export default function TodoListSidebar() {
   );
   const [forceRender, setForceRender] = useState(0); // New state to force re-render
 
+  /**
+   * A useEffect hook that increments the forceRender state to force a re-render when the selectedList changes.
+   */
   useEffect(() => {
-    console.log("Selected List:", selectedList);
-    setForceRender((prevForceRender) => prevForceRender + 1); // Increment to force re-render
+    setForceRender((prevForceRender) => prevForceRender + 1);
   }, [selectedList]);
 
+  /**
+   * A useEffect hook that sets the isDarkMode state based on the value of the "darkMode" key in localStorage.
+   */
   useEffect(() => {
     const darkModeStatus = localStorage.getItem("darkMode") === "enabled";
     setIsDarkMode(darkModeStatus);
-    // console.log("darkModeStatus:", darkModeStatus);
   }, []);
 
+  /**
+   * A function to handle the submission of the new list form.
+   * @param {object} e - The form submission event object.
+   */
   const handleAddNewList = async (e) => {
     e.preventDefault();
     if (newListName.trim()) {

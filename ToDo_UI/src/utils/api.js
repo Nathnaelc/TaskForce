@@ -1,9 +1,12 @@
-// api.js
 import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3001";
 
-// fetch all lists for a user
+/**
+ * Fetches all todo lists for a user.
+ * @returns {Promise<Array>} An array of todo lists.
+ * @throws {Error} If there was an error fetching the todo lists.
+ */
 const fetchTodoLists = async () => {
   try {
     const userId = localStorage.getItem("userId");
@@ -16,7 +19,13 @@ const fetchTodoLists = async () => {
   }
 };
 
-// add a new list on the TodoList Sidebar
+/**
+ * Adds a new list to the TodoList Sidebar.
+ * @param {string} userId The ID of the user adding the list.
+ * @param {string} listName The name of the new list.
+ * @returns {Promise<Object>} The new list object.
+ * @throws {Error} If there was an error adding the new list.
+ */
 const addNewList = async (userId, listName) => {
   try {
     const response = await fetch(`${BASE_URL}/api/lists/addlist`, {
@@ -37,6 +46,12 @@ const addNewList = async (userId, listName) => {
   }
 };
 
+/**
+ * Fetches all todos for a given list.
+ * @param {string} listId The ID of the list to fetch todos for.
+ * @returns {Promise<Array>} An array of todos for the given list.
+ * @throws {Error} If there was an error fetching the todos.
+ */
 const getAllTodosForList = async (listId) => {
   try {
     const response = await axios.get(
@@ -51,7 +66,12 @@ const getAllTodosForList = async (listId) => {
   }
 };
 
-// recursive function to get todo and subtasks
+/**
+ * Recursively fetches a todo and its subtasks.
+ * @param {string} taskId The ID of the todo to fetch.
+ * @returns {Promise<Object>} The todo object with its subtasks.
+ * @throws {Error} If there was an error fetching the todo and subtasks.
+ */
 const getTodoAndSubTasks = async (taskId) => {
   try {
     const response = await axios.get(
@@ -66,7 +86,12 @@ const getTodoAndSubTasks = async (taskId) => {
   }
 };
 
-// add a new parent todo task
+/**
+ * Adds a new parent todo task.
+ * @param {Object} todo The todo object to add.
+ * @returns {Promise<Object>} The new todo object.
+ * @throws {Error} If there was an error adding the new todo.
+ */
 const addTodo = async (todo) => {
   const response = await fetch(`${BASE_URL}/api/todos/addtodo`, {
     method: "POST",
@@ -84,7 +109,13 @@ const addTodo = async (todo) => {
   return await response.json();
 };
 
-// add a new subtask to a parent task
+/**
+ * Adds a new subtask to a parent task.
+ * @param {string} parentId The ID of the parent task.
+ * @param {Object} subtaskData The subtask object to add.
+ * @returns {Promise<Object>} The new subtask object.
+ * @throws {Error} If there was an error adding the new subtask.
+ */
 const addSubtaskAPI = async (parentId, subtaskData) => {
   try {
     console.log("Parent ID in API function::", parentId);
@@ -111,6 +142,12 @@ const addSubtaskAPI = async (parentId, subtaskData) => {
   }
 };
 
+/**
+ * Fetches a todo with its subtasks.
+ * @param {string} taskId The ID of the todo to fetch.
+ * @returns {Promise<Object>} The todo object with its subtasks.
+ * @throws {Error} If there was an error fetching the todo and subtasks.
+ */
 const getTodoWithSubtasks = async (taskId) => {
   try {
     const response = await fetch(
@@ -126,7 +163,13 @@ const getTodoWithSubtasks = async (taskId) => {
   }
 };
 
-// toggle Parent task completion
+/**
+ * Toggles the completion status of a parent task.
+ * @param {string} taskId The ID of the parent task.
+ * @param {boolean} isCompleted The new completion status.
+ * @returns {Promise<Object>} The updated todo object.
+ * @throws {Error} If there was an error toggling the completion status.
+ */
 const toggleTaskCompletion = async (taskId, isCompleted) => {
   const response = await fetch(
     `${BASE_URL}/api/todos/${taskId}/toggleCompletion`,
@@ -144,7 +187,12 @@ const toggleTaskCompletion = async (taskId, isCompleted) => {
   }
 };
 
-// delete a subtask with subtasks
+/**
+ * Deletes a subtask with its subtasks.
+ * @param {string} taskId The ID of the subtask to delete.
+ * @returns {Promise<Object>} The deleted subtask object.
+ * @throws {Error} If there was an error deleting the subtask and subtasks.
+ */
 const deleteTaskWithSubTasks = async (taskId) => {
   try {
     const response = await fetch(
@@ -165,7 +213,13 @@ const deleteTaskWithSubTasks = async (taskId) => {
   }
 };
 
-// move a task to a different list
+/**
+ * Moves a task to a different list.
+ * @param {string} taskId The ID of the task to move.
+ * @param {string} targetListId The ID of the target list.
+ * @returns {Promise<Object>} The updated todo object.
+ * @throws {Error} If there was an error moving the task.
+ */
 const moveTaskToList = async (taskId, targetListId) => {
   try {
     console.log("Task ID for move:", taskId);

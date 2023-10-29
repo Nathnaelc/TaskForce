@@ -1,4 +1,6 @@
-// Router endpoints for handling [login, registration, google login, logout]
+// Desc: This file contains the routes for user registration and login
+// Path: ToDo_API/routes/authRoutes.js
+// import express and create a router
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
@@ -7,7 +9,13 @@ const { pool } = require("../db/db");
 const { BYCRYPT_SALT_ROUNDS } = require("../db/db");
 const SECRET_KEY = process.env.JWT_SECRET_KEY || "fallback-secret-key";
 
-// Register endpoint for handling user registration
+/**
+ * Endpoint for handling user registration
+ * @param {string} email - The email of the user to be registered
+ * @param {string} password - The password of the user to be registered
+ * @param {string} fullName - The full name of the user to be registered
+ * @returns {object} - A JSON object containing a message, user data, and token
+ */
 router.post("/register", async (req, res) => {
   const { email, password, fullName } = req.body;
   try {
@@ -53,7 +61,12 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login endpoint for handling user login using email and password
+/**
+ * Endpoint for handling user login using email and password
+ * @param {string} email - The email of the user attempting to log in
+ * @param {string} password - The password of the user attempting to log in
+ * @returns {object} - A JSON object containing a token and user data
+ */
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -63,6 +76,7 @@ router.post("/login", async (req, res) => {
     const user = result.rows[0];
 
     if (!user) {
+      // If the user is not found, return an error message
       return res.status(401).json({
         message: "Invalid credentials.",
       });
@@ -70,11 +84,13 @@ router.post("/login", async (req, res) => {
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
+      // If the password is incorrect, return an error message
       return res.status(401).json({
         message: "Invalid credentials.",
       });
     }
 
+    // JWT (JSON Web Token) is used for authentication. The token includes the user details
     const token = jwt.sign(
       {
         userId: user.user_id,
@@ -87,6 +103,7 @@ router.post("/login", async (req, res) => {
       }
     );
 
+    // Return a successful login response along with the user data and token
     res.status(200).json({
       token: token,
       user: {
@@ -104,4 +121,5 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// export the router
 module.exports = router;

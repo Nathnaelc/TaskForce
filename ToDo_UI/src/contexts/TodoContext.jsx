@@ -13,6 +13,11 @@ import {
 
 const TodoContext = createContext();
 
+/**
+ * A provider component that wraps the entire app and provides access to the todo list data and functions.
+ * @param {ReactNode} children - The child components to be wrapped by the provider.
+ * @returns {ReactElement} - The todo list provider component.
+ */
 export const TodoProvider = ({ children }) => {
   const [lists, setLists] = useState([]);
   const [todos, setTodos] = useState([]);
@@ -22,7 +27,11 @@ export const TodoProvider = ({ children }) => {
   const [noListsAvailable, setNoListsAvailable] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
-  // This function will be used to organize the tasks and subtasks into a tree structure
+  /**
+   * A function to organize the tasks and subtasks into a tree structure.
+   * @param {Array} flatList - The flat list of tasks and subtasks.
+   * @returns {Array} - The organized list of tasks and subtasks.
+   */
   const organizeTasksAndSubtasks = (flatList) => {
     const taskMap = {};
     const rootTasks = [];
@@ -75,6 +84,10 @@ export const TodoProvider = ({ children }) => {
     loadLists();
   }, []);
 
+  /**
+   * A function to refresh the tasks for the selected list.
+   * @param {number} listId - The ID of the selected list.
+   */
   const refreshTasks = async (listId) => {
     try {
       setLoading(true);
@@ -129,7 +142,10 @@ export const TodoProvider = ({ children }) => {
     }
   }, [selectedList]);
 
-  // This function will be used to select a task and render its subtasks on the sidebar
+  /**
+   * A function to select a task and render its subtasks on the sidebar.
+   * @param {number} taskId - The ID of the selected task.
+   */
   const selectTask = (taskId) => {
     const task = todos.find((todo) => todo.task_id === taskId);
     if (task) {
@@ -155,11 +171,17 @@ export const TodoProvider = ({ children }) => {
     console.log("Selected task changed:", selectedTask);
   }, [selectedTask]);
 
+  /**
+   * A function to deselect the currently selected task.
+   */
   const deselectTask = () => {
     setSelectedTask(null);
   };
 
-  // add parent task on a selected list
+  /**
+   * A function to add a parent task to the selected list.
+   * @param {Object} newTask - The new task object to be added.
+   */
   const addTask = async (newTask) => {
     try {
       setLoading(true);
@@ -172,7 +194,12 @@ export const TodoProvider = ({ children }) => {
     }
   };
 
-  // function to add subtask of a given task
+  /**
+   * A function to add a subtask to a given task.
+   * @param {number} listId - The ID of the selected list.
+   * @param {number} parentId - The ID of the parent task.
+   * @param {string} taskName - The name of the new subtask.
+   */
   const addSubtask = async (listId, parentId, taskName) => {
     try {
       setLoading(true);
@@ -215,7 +242,10 @@ export const TodoProvider = ({ children }) => {
     }
   };
 
-  // function to add a list on the sidebar
+  /**
+   * A function to add a new list to the sidebar.
+   * @param {string} listName - The name of the new list.
+   */
   const addList = async (listName) => {
     try {
       const userId = localStorage.getItem("userId");
@@ -226,7 +256,11 @@ export const TodoProvider = ({ children }) => {
     }
   };
 
-  // function to toggle the completion of a task
+  /**
+   * A function to toggle the completion of a task.
+   * @param {number} taskId - The ID of the task to be toggled.
+   * @param {boolean} isCompleted - The new completion status of the task.
+   */
   const handleToggleCompletion = async (taskId, isCompleted) => {
     try {
       const updatedTask = await toggleTaskCompletion(taskId, isCompleted);
@@ -242,7 +276,10 @@ export const TodoProvider = ({ children }) => {
     }
   };
 
-  // delete a task with its subtasks
+  /**
+   * A function to delete a task and its subtasks.
+   * @param {number} taskId - The ID of the task to be deleted.
+   */
   const deleteTaskAndSubtasks = async (taskId) => {
     try {
       await deleteTaskWithSubTasks(taskId); // Assume this function deletes the task and its subtasks from the database
@@ -267,7 +304,11 @@ export const TodoProvider = ({ children }) => {
     }
   };
 
-  // function to move a task to another list
+  /**
+   * A function to move a task to another list.
+   * @param {number} taskId - The ID of the task to be moved.
+   * @param {number} targetListId - The ID of the target list.
+   */
   const moveTask = async (taskId, targetListId) => {
     try {
       setLoading(true);
@@ -316,6 +357,10 @@ export const TodoProvider = ({ children }) => {
   );
 };
 
+/**
+ * A custom hook that provides access to the todo list context.
+ * @returns {Object} - The todo list context object.
+ */
 export const useTodoContext = () => {
   const context = useContext(TodoContext);
   if (!context) {

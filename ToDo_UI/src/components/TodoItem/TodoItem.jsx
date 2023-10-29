@@ -1,16 +1,28 @@
 import React, { useState } from "react";
 import { useTodoContext } from "../../contexts/TodoContext";
 
+/**
+ * A component that displays a single todo item.
+ * @param {object} todo - The todo item to display.
+ * @returns {ReactElement} - The todo item component.
+ */
 export default function TodoItem({ todo }) {
   const { setSelectedTask, handleToggleCompletion } = useTodoContext();
   const [showModal, setShowModal] = useState(false); // for custom modal
   const isDarkMode = localStorage.getItem("isDarkMode") === "true";
 
+  /**
+   * A function to handle the click event of the todo item checkbox.
+   * @param {object} e - The click event object.
+   */
   const handleCheckboxClick = (e) => {
     e.stopPropagation();
     setShowModal(true); // show the custom modal
   };
 
+  /**
+   * A function to handle the confirmation of the custom modal.
+   */
   const handleConfirm = () => {
     const isCompleted = !todo.is_completed;
     handleToggleCompletion(todo.task_id, isCompleted);

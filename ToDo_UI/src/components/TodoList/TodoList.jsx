@@ -3,6 +3,10 @@ import TodoItem from "../TodoItem/TodoItem";
 import { useTodoContext } from "../../contexts/TodoContext";
 import { getTodoAndSubTasks } from "../../utils/api";
 
+/**
+ * A component that displays a list of todo items.
+ * @returns {ReactElement} - The todo list component.
+ */
 const TodoList = () => {
   const {
     todos,
@@ -17,7 +21,12 @@ const TodoList = () => {
   const [activeTodoId, setActiveTodoId] = useState(null);
   const [isCompletedSectionOpen, setCompletedSectionOpen] = useState(false);
 
-  const handleAddTask = async () => {
+  /**
+   * A function to handle the submission of the new task form.
+   * @param {object} e - The form submission event object.
+   */
+  const handleAddTask = async (e) => {
+    e.preventDefault();
     if (newTaskName) {
       const userId = localStorage.getItem("userId");
       const newTask = {
@@ -30,12 +39,21 @@ const TodoList = () => {
     }
   };
 
+  /**
+   * A function to handle the click event of a todo item.
+   * @param {number} taskId - The ID of the clicked todo item.
+   */
   const handleTodoClick = async (taskId) => {
     const fullTask = await getTodoAndSubTasks(taskId);
     setActiveTodoId(taskId);
     selectTask(taskId);
   };
 
+  /**
+   * A function to handle the move of a todo item to a different list.
+   * @param {number} taskId - The ID of the todo item to move.
+   * @param {number} newListId - The ID of the list to move the todo item to.
+   */
   const handleMoveTask = async (taskId, newListId) => {
     if (newListId !== selectedList.list_id) {
       await moveTask(taskId, newListId);
@@ -48,10 +66,7 @@ const TodoList = () => {
     <div className="space-y-2 w-full font-medium">
       <form
         className="flex items-center space-x-2 mb-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleAddTask();
-        }}
+        onSubmit={handleAddTask}
       >
         <input
           type="text"

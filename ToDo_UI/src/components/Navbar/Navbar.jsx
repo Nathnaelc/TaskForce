@@ -3,14 +3,22 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MenuIcon } from "@heroicons/react/solid";
 import DarkModeToggler from "../DarkModeToggler/DarkModeToggler";
 
+/**
+ * A navigation bar component that displays links and buttons for navigating the app.
+ * @param {boolean} loggedIn - Whether the user is logged in or not.
+ * @param {object} user - The user object.
+ * @param {function} setUser - A function to set the user object.
+ * @param {function} setLoggedIn - A function to set whether the user is logged in or not.
+ * @returns {ReactElement} - The navigation bar component.
+ */
 export default function NavBar({ loggedIn, user, setUser, setLoggedIn }) {
   const navigate = useNavigate();
-  const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("");
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
+    // Check if the user is logged in and set the state accordingly
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
       setLoggedIn(true);
@@ -25,6 +33,9 @@ export default function NavBar({ loggedIn, user, setUser, setLoggedIn }) {
 
   let autoCloseTimer;
 
+  /**
+   * A function to handle logging out the user.
+   */
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -34,9 +45,16 @@ export default function NavBar({ loggedIn, user, setUser, setLoggedIn }) {
     navigate("/login");
   };
 
+  /**
+   * A component for rendering a menu button.
+   * @param {string} label - The label for the button.
+   * @param {string} path - The path for the button.
+   * @returns {ReactElement} - The menu button component.
+   */
   const MenuButton = ({ label, path }) => (
     <button
       onClick={() => {
+        // If the user is not logged in and trying to access the home page, show a toast message
         if (path === "/home" && !loggedIn) {
           handleClick();
           return;
@@ -52,6 +70,9 @@ export default function NavBar({ loggedIn, user, setUser, setLoggedIn }) {
     </button>
   );
 
+  /**
+   * A function to handle clicking the menu button when the user is not logged in.
+   */
   const handleClick = () => {
     if (!loggedIn) {
       setShowToast(true);
