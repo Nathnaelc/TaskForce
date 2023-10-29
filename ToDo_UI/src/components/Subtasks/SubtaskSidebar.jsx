@@ -8,11 +8,6 @@ import SubtaskComponent from "../TodoList/SubTaskList";
  * @returns {ReactElement} - The subtask sidebar component.
  */
 export default function SubtaskSidebar({ task }) {
-  // Log the initial task when the component mounts or the task prop changes
-  useEffect(() => {
-    console.log("Initial task in sidebar:", task);
-  }, [task]);
-
   /**
    * A function to check if a task object is valid.
    * @param {object} task - The task object to check.

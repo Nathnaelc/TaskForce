@@ -118,10 +118,6 @@ const addTodo = async (todo) => {
  */
 const addSubtaskAPI = async (parentId, subtaskData) => {
   try {
-    console.log("Parent ID in API function::", parentId);
-    console.log("Subtask Data in API function:", subtaskData);
-    console.log("Type of Parent ID in API function:", typeof parentId);
-
     const response = await fetch(
       `${BASE_URL}/api/todos/${parentId}/addSubtask`,
       {

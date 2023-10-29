@@ -100,6 +100,7 @@ export const TodoProvider = ({ children }) => {
     }
   };
 
+  // for loading the lists
   useEffect(() => {
     async function loadInitialData() {
       try {
@@ -129,7 +130,7 @@ export const TodoProvider = ({ children }) => {
           setLoading(true);
           const data = await getAllTodosForList(selectedList.list_id);
           const organizedData = organizeTasksAndSubtasks(data);
-          console.log("Initial todos:", data);
+          // console.log("Initial todos:", data);
           setTodos(organizedData);
         } catch (err) {
           setError(err.message);
@@ -154,22 +155,6 @@ export const TodoProvider = ({ children }) => {
       console.error("Task with ID", taskId, "not found!");
     }
   };
-
-  //for deubgging
-  useEffect(() => {
-    console.log("Selected task changed:", selectedTask);
-  }, [selectedTask]);
-  //for deubgging
-
-  // for deubgging
-  useEffect(() => {
-    console.log("TodoProvider re-rendered");
-  });
-
-  // for deubgging
-  useEffect(() => {
-    console.log("Selected task changed:", selectedTask);
-  }, [selectedTask]);
 
   /**
    * A function to deselect the currently selected task.

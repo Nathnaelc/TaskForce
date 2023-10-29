@@ -32,22 +32,19 @@ function AppRoutes() {
   if (isLoading) return <h1>Loading...</h1>;
 
   return (
-    <>
+    <TodoProvider>
       <NavBar
         loggedIn={isLoggedIn}
         setLoggedIn={setIsLoggedIn}
         user={userData}
         setUser={setUserData}
       />
-
       <Routes>
         <Route
           path="/"
           element={
             isLoggedIn ? (
-              <TodoProvider>
-                <TodoListContainer />
-              </TodoProvider>
+              <TodoListContainer />
             ) : (
               <Navigate to="/login" replace />
             )
@@ -79,6 +76,6 @@ function AppRoutes() {
         />
         <Route path="*" element={<h1>404 not found</h1>} />
       </Routes>
-    </>
+    </TodoProvider>
   );
 }

@@ -83,3 +83,53 @@ The application is deployed on Render and can be accessed [here](https://taskfor
 ## Contributing
 
 This is a solo project for CS162 assignment
+
+## Application Structure
+
+This section outlines the well-considered structure of the application, offering an in-depth look into how various components are organized. Our architecture is rooted in the principle of Separation of Concerns, ensuring that each component is dedicated to a specific function, thus making the system both maintainable and scalable.
+
+### Backend Structure
+
+The backend is neatly organized into distinct folders, each serving a unique purpose:
+
+```plaintext
+ToDo_API/
+├── db/db.js                 # Manages database connections
+├── models/               # Contains the todo lists and tasks logic and interacts with the database
+│   ├── listModel.js
+│   └── todoModel.js
+├── routes/               # Defines the API endpoints and their corresponding actions
+│   ├── authRoutes.js
+│   ├── listRoutes.js
+│   └── todoRoutes.js
+└── server.js             # Entry point for the backend, initializing the server and middleware
+```
+
+### Frontend Structure
+
+```
+ToDo_UI/
+├── src/
+│   ├── components/
+│   │   ├── WholeContainer/  # Houses the main layout components
+│   │   │   ├── SideListContainer.jsx
+│   │   │   ├── TaskWrapper.jsx
+│   │   │   └── TodoListContainer.jsx
+│   ├── contexts/             # Manages state and shares it across different components
+│   │   └── AuthContext.jsx, TodoContext.jsx
+│   └── utils/                # Contains utility functions and API calls
+│       └── api.js
+
+```
+
+### Simple explanation of the app logic
+
+The app has the following logic for Http connections. A todo model -> connects backend to database -> imported in routes -> routes create an endpoint reachable by the frontend -> api.js functions calls an endpoint on the backend and export it -> context provider imports the function and handle the request from components.
+
+The application strictly adheres to the principle of Separation of Concerns. Each part of the system is designed to handle a specific task and is neatly organized into its own folder and file. For instance, database models are separated from routing logic and the task lists and todos are managed separately, and within the frontend, state management is decoupled from UI components. The authentication logics are implemented in different context provider than the todo context providers. This structure ensures that each component handles conceptually similar tasks, making the codebase easier to maintain and extend.
+
+Throughout the codebase, I used brief comments and docstrings liberally to explain the functionality of each section. Error messages are clear and informative, aiding in debugging and understanding the code. One can spend few minutes and pick up the logic of the app and understand it. Also, I followed Naming conventions and used expressive names to improve readability of the code. So when I come back after sometime to add features, it is going to be easy to do so.
+
+```
+
+```
