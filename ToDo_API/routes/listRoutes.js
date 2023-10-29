@@ -18,7 +18,7 @@ router.get("/:userId/getlists", async (req, res) => {
 
 /**
  * Endpoint for creating a new list
- * @param {string} user_id - The ID of the user creating the list
+ * @param {string} user_id - The ID of the user creating the lists
  * @param {string} list_name - The name of the new list
  * @returns {object} - A JSON object containing the newly created list
  */

@@ -15,7 +15,7 @@ const app = express();
 
 // Enabling Cross-Origin Resource Sharing (CORS) with configuration
 const corsOptions = {
-  origin: ["http://localhost:5173"], // Update with the frontend app's port
+  origin: ["http://localhost:5173", "https://taskforceui.onrender.com"], // Update with the frontend app's port
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204,
