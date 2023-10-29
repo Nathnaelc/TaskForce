@@ -28,7 +28,7 @@ Taskforce is an intuitive hierarchical todo list application designed to help us
 - Delete Tasks and Subtasks
 - Move Tasks to Different Lists
 
-See [this loom video](link-to-loom-video) for a walkthrough of these features.
+See [this loom video](https://www.loom.com/share/69396f4edf1046fe9e6812158bf7f99f?sid=61ee8135-3fbf-429d-b2df-72582156539f) for a walkthrough of these features.
 
 ## Technologies Used
 
