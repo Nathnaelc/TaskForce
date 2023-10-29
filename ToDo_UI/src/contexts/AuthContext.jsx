@@ -1,5 +1,4 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "axios";
 import jwt_decode from "jwt-decode";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
