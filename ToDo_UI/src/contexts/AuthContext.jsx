@@ -113,7 +113,6 @@ export const AuthProvider = ({ children }) => {
         login,
         loginError,
         setLoginError,
-        setIsLoggedIn,
         isLoading,
       }}
     >
